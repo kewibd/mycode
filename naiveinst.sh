@@ -172,6 +172,16 @@ EOF'
     sudo systemctl daemon-reload
     sudo systemctl enable caddy
     echo "Caddy 服务已启用。"
+
+        # 显示用户输入的信息
+    echo "服务器: $domain"
+    echo "用户名: $username"
+    echo "密码: $password"
+    echo "反向代理网址: $proxy_url"
+
+    # 显示脚本所在路径
+    script_path=$(realpath "$0")
+    echo "脚本所在路径: $script_path"
 }
 
 # 显示菜单
