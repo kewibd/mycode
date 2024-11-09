@@ -71,11 +71,6 @@ function install_caddy() {
             echo "配置防火墙，打开 80 和 443 端口..."
             sudo ufw allow 80/tcp
             sudo ufw allow 443/tcp
-
-            # 启用并确认防火墙规则
-            sudo ufw enable
-            sudo ufw status verbose
-
             echo "Caddy 安装完成，防火墙端口已配置！"
         else
             echo "Caddy 文件未成功移动到 /usr/bin/caddy，请检查路径。"
