@@ -182,6 +182,15 @@ EOF'
     # 显示脚本所在路径
     script_path=$(realpath "$0")
     echo "脚本所在路径: $script_path"
+
+        # 询问用户是否重启服务器
+    read -p "是否重启服务器以确保配置生效？(y/n): " restart_choice
+    if [[ "$restart_choice" == "y" || "$restart_choice" == "Y" ]]; then
+        echo "正在重启服务器..."
+        reboot
+    else
+        echo "服务器未重启，Caddy 服务已启动。"
+    fi
 }
 
 # 显示菜单
