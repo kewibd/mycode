@@ -30,13 +30,12 @@ function install_go() {
         sudo tar -C /usr/local -xzf /tmp/go${LATEST_VERSION_NUMBER}.linux-amd64.tar.gz
 
         # 临时添加 Go 的路径到当前 shell 会话中
-        echo export PATH=$PATH:/usr/local/go/bin  >> /etc/profile
+        echo "export PATH=\$PATH:/usr/local/go/bin" | sudo tee -a /etc/profile > /dev/null
         source /etc/profile
 
         # 确保 Go 在当前 shell 会话生效
         echo "Go 路径已添加到当前会话，您可以立即使用 Go："
         go version
-
     else
         echo "已安装的 Go 版本满足要求，无需更新。"
     fi
@@ -45,10 +44,9 @@ function install_go() {
 # 安装 Caddy 的函数
 function install_caddy() {
     # 使用 xcaddy 构建 Caddy
-    echo "使用 xcaddy 构建 Caddy..."
-            sudo ufw allow 80/tcp
-            sudo ufw allow 443/tcp
-    ~/go/bin/xcaddy build --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
+    echo "使用 xcaddy 构建 Caddy..." 
+                go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+                ~/go/bin/xcaddy build --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
     
     # 检查 Caddy 是否在当前目录下
     if [ -f ./caddy ]; then
@@ -69,6 +67,16 @@ function install_caddy() {
             else
                 echo "设置权限失败，请检查 Caddy 可执行文件是否存在，并确保其不是符号链接。"
             fi
+                 # 配置防火墙，打开 80 和 443 端口
+            echo "配置防火墙，打开 80 和 443 端口..."
+            sudo ufw allow 80/tcp
+            sudo ufw allow 443/tcp
+
+            # 启用并确认防火墙规则
+            sudo ufw enable
+            sudo ufw status verbose
+
+            echo "Caddy 安装完成，防火墙端口已配置！"
         else
             echo "Caddy 文件未成功移动到 /usr/bin/caddy，请检查路径。"
         fi
