@@ -2,7 +2,18 @@
 
 # 定义安装 Go 的函数
 function install_go() {
-    # 获取 Go 的最新版本号
+    # 检查 curl 是否安装
+    if ! command -v curl &>/dev/null; then
+        echo "curl 未安装，正在安装 curl..."
+        apt update
+        apt install -y curl
+        if [[ $? -ne 0 ]]; then
+            echo "curl 安装失败，请检查网络连接。"
+            exit 1
+        fi
+    fi
+
+  # 获取 Go 的最新版本号
     LATEST_VERSION=$(curl -s https://go.dev/dl/ | grep -oP 'go[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
     LATEST_VERSION_NUMBER=${LATEST_VERSION//go/}
 
@@ -11,7 +22,7 @@ function install_go() {
         INSTALLED_VERSION=$(go version | awk '{print $3}' | sed 's/go//')
         echo "检测到已安装的 Go 版本: $INSTALLED_VERSION"
     else
-        INSTALLED_VERSION=""
+        INSTALLED  _VERSION=""
         echo "未检测到 Go 语言"
     fi
 
